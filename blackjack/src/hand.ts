@@ -1,3 +1,8 @@
+/**
+ * A simple class to represent a two card hand
+ *
+ * Author: D.Blossom
+ */
 module BJ{
 	
 	export class Hand{
@@ -5,7 +10,5 @@ module BJ{
 		constructor(public cardOne:Card, public cardTwo:Card){
 			
 		}
-		
 	}
-	
 }

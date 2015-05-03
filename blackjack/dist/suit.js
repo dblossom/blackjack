@@ -1,10 +1,15 @@
+/**
+ * An enum to represent a playing cards suit
+ *
+ * Author: D. Blossom
+ */
 var BJ;
 (function (BJ) {
-    (function (Suit) {
-        Suit[Suit["Diamonds"] = 0] = "Diamonds";
-        Suit[Suit["Hearts"] = 1] = "Hearts";
-        Suit[Suit["Spades"] = 2] = "Spades";
-        Suit[Suit["Clubs"] = 3] = "Clubs";
-    })(BJ.Suit || (BJ.Suit = {}));
-    var Suit = BJ.Suit;
+    (function (Suits) {
+        Suits[Suits["Diamonds"] = 0] = "Diamonds";
+        Suits[Suits["Hearts"] = 1] = "Hearts";
+        Suits[Suits["Spades"] = 2] = "Spades";
+        Suits[Suits["Clubs"] = 3] = "Clubs";
+    })(BJ.Suits || (BJ.Suits = {}));
+    var Suits = BJ.Suits;
 })(BJ || (BJ = {}));

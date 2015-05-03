@@ -1,3 +1,8 @@
+/**
+ * A simple class to represent a two card hand
+ *
+ * Author: D.Blossom
+ */
 var BJ;
 (function (BJ) {
     var Hand = (function () {

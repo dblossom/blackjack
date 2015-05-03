@@ -4,9 +4,9 @@ module BJ{
 		
 		constructor(){}
 			
-			public static simptest(){
+		public static simptest(){
 			
-			var s = Suit.Hearts;
+		    var s = Suits.Hearts;
 			var n:number = 13; 
 			
 			var c = new BJ.Card(s,n);
@@ -19,7 +19,11 @@ module BJ{
 	        
 	        context.fillText(" of ", 15, 25);
 	        
-	        context.fillText(Suit[c.suit].toString(), 55, 25);
+	        context.fillText(Suits[c.suit].toString(), 55, 25);
+	        
+	        var h = new Deck();
+	        
+	        h.buildDeck();
 	
 		}
 	}
