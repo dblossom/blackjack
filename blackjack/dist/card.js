@@ -1,3 +1,4 @@
+///<reference path="suit.ts" />
 var BJ;
 (function (BJ) {
     var Card = (function () {
@@ -6,15 +7,15 @@ var BJ;
             this.value = value;
         }
         Card.simptest = function () {
-            var s = "S";
-            var n = "5";
+            var s = BJ.Suit.Diamonds;
+            var n = 5;
             var c = new BJ.Card(s, n);
             var canvas = document.getElementById('display');
             var context = canvas.getContext('2d');
             context.font = "bold 20px Arial";
-            //context.clearRect(0,0,canvas.width, canvas.height);
-            context.fillText(c.suit, 0, 25);
-            context.fillText(c.value, 15, 25);
+            context.fillText(c.value.toString(), 0, 25);
+            context.fillText(" of ", 15, 25);
+            context.fillText(BJ.Suit[c.suit].toString(), 55, 25);
         };
         return Card;
     })();

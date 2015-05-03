@@ -1,32 +1,30 @@
-
+///<reference path="suit.ts" />
 
 module BJ{
 	
 	export class Card{
 		
-		public suit:string;
-		public value:string;
-		
-		constructor(suit:string, value:string){
-			this.suit = suit;
-			this.value = value;
+		constructor(public suit:Suit, public value:number){
+
 		}
 		
 		public static simptest(){
 			
-			var s:string = "S";
-			var n:string = "5"; 
+			var s = Suit.Diamonds;
+			var n:number = 5; 
 			
 			var c = new BJ.Card(s,n);
 			
 		    var canvas = <HTMLCanvasElement>document.getElementById('display');
 		    var context = canvas.getContext('2d');
 		    context.font = "bold 20px Arial";
+		    
+		    context.fillText(c.value.toString(), 0, 25);
+	        
+	        context.fillText(" of ", 15, 25);
+	        
+	        context.fillText(Suit[c.suit].toString(), 55, 25);
 	
-            //context.clearRect(0,0,canvas.width, canvas.height);
-	        context.fillText(c.suit, 0, 25);
-	        context.fillText(c.value, 15, 25);	
 		}
-		
 	}
 }
