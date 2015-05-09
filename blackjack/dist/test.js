@@ -14,7 +14,7 @@ var BJ;
             context.fillText(" of ", 15, 25);
             context.fillText(BJ.Suits[c.suit].toString(), 55, 25);
             var h = new BJ.Deck();
-            h.buildDeck();
+            h.unshuffledDeck();
         };
         return Test;
     })();

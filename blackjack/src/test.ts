@@ -23,7 +23,7 @@ module BJ{
 	        
 	        var h = new Deck();
 	        
-	        h.buildDeck();
+	        h.unshuffledDeck();
 	
 		}
 	}

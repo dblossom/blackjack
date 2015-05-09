@@ -7,7 +7,7 @@ module BJ{
 	
 	export class Deck{
 		// this is our unshuffled deck
-		public unshuffledDeck = new Array<Card>();
+		public unshuffled = new Array<Card>();
 		
 		constructor(){
 		    	
@@ -16,7 +16,7 @@ module BJ{
 		/**
 		 * Misleading title, for now - makes an unshuffled deck
 		 */
-		public buildDeck(){
+		public unshuffledDeck():void{
 			
 		    for(var suit in Suits){
 		    	// ugh - so, this will loop over both the
@@ -26,7 +26,7 @@ module BJ{
 		    	
 		            for(var i:number = 1; i < 14; i++){
 		        	
-		        	    this.unshuffledDeck.push(new Card(suit, i));
+		        	    this.unshuffled.push(new Card(suit, i));
 		        	
 		            }
 		        }
