@@ -2,29 +2,34 @@ module BJ{
 	
 	export class Test{
 		
+		public deck;
+		public shuffled;
+		
 		constructor(){}
 			
-		public static simptest(){
+		public load(){
+			this.deck = new Deck();
+            this.shuffled = this.deck.shuffleDeck(this.deck.unshuffled);
+		}
+		
+		public dealCard(btn){
 			
-		    var s = Suits.Hearts;
-			var n:number = 13; 
-			
-			var c = new BJ.Card(s,n);
-			
+		    var card = this.shuffled.pop();
+		    
+		    if(typeof card === 'undefined'){
+		    	this.deck = new Deck();
+		    	this.shuffled = this.deck.shuffleDeck(this.deck.unshuffled);
+		    	card = this.shuffled.pop();
+		    }
+		    
 		    var canvas = <HTMLCanvasElement>document.getElementById('display');
 		    var context = canvas.getContext('2d');
 		    context.font = "bold 20px Arial";
+		    context.clearRect(0,0,500,50);
+		    context.fillText(card.value.toString(), 0, 25);
+	        context.fillText("  of  ", 15, 25);
+	        context.fillText(card.suit.toString(), 55, 25);
 		    
-		    context.fillText(c.value.toString(), 0, 25);
-	        
-	        context.fillText(" of ", 15, 25);
-	        
-	        context.fillText(Suits[c.suit].toString(), 55, 25);
-	        
-	        var h = new Deck();
-	        
-	        h.unshuffledDeck();
-	
 		}
 	}
 }

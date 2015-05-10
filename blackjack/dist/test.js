@@ -3,18 +3,24 @@ var BJ;
     var Test = (function () {
         function Test() {
         }
-        Test.simptest = function () {
-            var s = BJ.Suits.Hearts;
-            var n = 13;
-            var c = new BJ.Card(s, n);
+        Test.prototype.load = function () {
+            this.deck = new BJ.Deck();
+            this.shuffled = this.deck.shuffleDeck(this.deck.unshuffled);
+        };
+        Test.prototype.dealCard = function (btn) {
+            var card = this.shuffled.pop();
+            if (typeof card === 'undefined') {
+                this.deck = new BJ.Deck();
+                this.shuffled = this.deck.shuffleDeck(this.deck.unshuffled);
+                card = this.shuffled.pop();
+            }
             var canvas = document.getElementById('display');
             var context = canvas.getContext('2d');
             context.font = "bold 20px Arial";
-            context.fillText(c.value.toString(), 0, 25);
-            context.fillText(" of ", 15, 25);
-            context.fillText(BJ.Suits[c.suit].toString(), 55, 25);
-            var h = new BJ.Deck();
-            h.unshuffledDeck();
+            context.clearRect(0, 0, 500, 50);
+            context.fillText(card.value.toString(), 0, 25);
+            context.fillText("  of  ", 15, 25);
+            context.fillText(card.suit.toString(), 55, 25);
         };
         return Test;
     })();

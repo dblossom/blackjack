@@ -16,15 +16,25 @@
 
 </head>
 
-<body onload="BJ.Test.simptest();">
+<body onload="BJ.Test.prototype.load();">
 
 <p> Holding page for Blackjack game </p>
 <div id="main" style="width:100%;">
     <canvas id="display"
         width="500px"
         height="50px"
-        tabindex="1">
+        tabindex="0">
     </canvas>
+
+<input type="button"
+                id = "deal"
+                name="DEAL"
+                class="normal_button"
+                value="deal"
+                tabindex="1"
+                onclick="BJ.Test.prototype.dealCard(this);">
+
 </div>
+
 </body>
 </html>
