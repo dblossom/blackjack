@@ -19,6 +19,22 @@ var BJ;
             this.QUEEN = 12;
             this.KING = 13;
         }
+        /**
+         * I am going to try and not use the methods outlined below
+         * seems redundent to what I have above...
+         */
+        Card.prototype.isAce = function () {
+            return (this.value == this.ACE);
+        };
+        Card.prototype.isKing = function () {
+            return (this.value == this.KING);
+        };
+        Card.prototype.isQueen = function () {
+            return (this.value == this.QUEEN);
+        };
+        Card.prototype.isJack = function () {
+            return (this.value == this.JACK);
+        };
         return Card;
     })();
     BJ.Card = Card;

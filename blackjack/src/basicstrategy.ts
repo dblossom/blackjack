@@ -45,7 +45,56 @@ module BJ{
 		];
 		
 		constructor(){}
-	    
+			
 		
+		public Advice(hand: Hand, upCard: Card): Play{
+			
+			var play: Play = null;
+			
+		    var column:number = (upCard.isAce()) ? 9 : (upCard.value - 2); 
+		    
+		    if(hand.isPair()){
+		    	play = this.pairLookup(hand, column);
+		    }else if(hand.size() == 2 && this.hasAce(hand)){
+		    	play = this.aceLookup(hand, column);
+		    }else{
+		    	play = this.hardLookup(hand, column);
+		    }
+			
+			return play;
+		}
+		
+		private hasAce(hand:Hand):boolean{
+			for(var i:number = 0; i < hand.size(); i++){
+				if(hand.seeCard(i).isAce()){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private pairLookup(hand:Hand, upCard:number):Play{
+			
+			var row = hand.seeCard(0).value;
+			
+			if(row > 1 && row < 8){
+				return this.PAIR[row-2][upCard];
+			}else if(row === 8 || row === 1){
+				return this.PAIR[8][upCard];
+			}else if (row === 9){
+				return this.PAIR[6][upCard];
+			}else{
+				return this.PAIR[7][upCard];
+			}
+		}
+		
+		private aceLookup(hand:Hand, column:number):Play{
+			return Play.Hit;
+		}
+		
+		private hardLookup(hand:Hand, column:number):Play{
+			return Play.Hit;
+		}
+	    
 	}
 }
