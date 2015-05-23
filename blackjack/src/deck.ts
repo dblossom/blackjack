@@ -8,6 +8,7 @@ module BJ{
 	export class Deck{
 		// this is our unshuffled deck
 		public unshuffled = new Array<Card>(); 
+		public shuffled;
 		
 		constructor(){
 		    this.unshuffledDeck();  	
@@ -38,23 +39,31 @@ module BJ{
 		 *
 		 * @param toShuffle - the unshuffled card array
 		 */
-		 public shuffleDeck(toShuffle: Array<Card>): Array<Card>{
+		 public shuffleDeck(): void{
 		     // the shuffled array to return
-		     var shuffled = new Array<Card>();
+		     this.shuffled = [];
 		     
 		     // loop over the unshuffled array randomly removing elements
-		     while(toShuffle.length > 0){
+		     while(this.unshuffled.length > 0){
 		     	// our random number / card to pull
-		     	var randomCard = Math.floor(Math.random() * toShuffle.length);
+		     	var randomCard = Math.floor(Math.random() * this.unshuffled.length);
 		     	// the card we just removed from the array
-		     	var card = toShuffle.splice(randomCard, 1);
+		     	var card = this.unshuffled.splice(randomCard, 1);
 		     	// put the new card in the array - note to self here ...
 		     	// everything in javascript is an object, as such, card gets
 		     	// returned as an array of elements
-		     	shuffled.push(new Card(card[0].suit, card[0].value));
+		     	this.shuffled.push(new Card(card[0].suit, card[0].value()));
 		     }   
-		     // the returned shuffled array
-		     return shuffled;	
+		 }
+		 
+		 public deal():Card{
+            if(this.shuffled.length === 0){
+            	if(this.unshuffled.length != 0){
+            		return this.unshuffled.shift();
+            	}
+            	return null;
+            }
+		 	return this.shuffled.shift();
 		 }
 	}
 }

@@ -51,7 +51,7 @@ module BJ{
 			
 			var play: Play = null;
 			
-		    var column:number = (upCard.isAce()) ? 9 : (upCard.value - 2); 
+		    var column:number = (upCard.isAce()) ? 9 : (upCard.value() - 2); 
 		    
 		    if(hand.isPair()){
 		    	play = this.pairLookup(hand, column);
@@ -60,7 +60,6 @@ module BJ{
 		    }else{
 		    	play = this.hardLookup(hand, column);
 		    }
-			
 			return play;
 		}
 		
@@ -73,27 +72,44 @@ module BJ{
 			return false;
 		}
 		
-		private pairLookup(hand:Hand, upCard:number):Play{
+		private pairLookup(hand:Hand, column:number):Play{
 			
-			var row = hand.seeCard(0).value;
+			var row = hand.seeCard(0).value();
 			
 			if(row > 1 && row < 8){
-				return this.PAIR[row-2][upCard];
+				return this.PAIR[row-2][column];
 			}else if(row === 8 || row === 1){
-				return this.PAIR[8][upCard];
+				return this.PAIR[8][column];
 			}else if (row === 9){
-				return this.PAIR[6][upCard];
+				return this.PAIR[6][column];
 			}else{
-				return this.PAIR[7][upCard];
+				return this.PAIR[7][column];
 			}
 		}
 		
 		private aceLookup(hand:Hand, column:number):Play{
-			return Play.Hit;
+			
+			// we want the "non-ace" card for the lookup table
+			var row = hand.seeCard(0).isAce() ? hand.seeCard(1).value() : hand.seeCard(0).value();
+			
+			if(row > 1 && row < 8){
+				return this.ACE[row-2][column];
+			}else{
+				return this.ACE[6][column];
+			}
 		}
 		
 		private hardLookup(hand:Hand, column:number):Play{
-			return Play.Hit;
+			
+			var row = hand.value();
+			
+			if(row > 4 && row < 9){
+				return this.HARD[0][column];
+			}else if(row > 8 && row < 17){
+				return this.HARD[row - 8][column];
+			}else{
+				return this.HARD[9][column];
+			}
 		}
 	    
 	}

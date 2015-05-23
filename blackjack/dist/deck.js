@@ -31,22 +31,29 @@ var BJ;
          *
          * @param toShuffle - the unshuffled card array
          */
-        Deck.prototype.shuffleDeck = function (toShuffle) {
+        Deck.prototype.shuffleDeck = function () {
             // the shuffled array to return
-            var shuffled = new Array();
+            this.shuffled = [];
             // loop over the unshuffled array randomly removing elements
-            while (toShuffle.length > 0) {
+            while (this.unshuffled.length > 0) {
                 // our random number / card to pull
-                var randomCard = Math.floor(Math.random() * toShuffle.length);
+                var randomCard = Math.floor(Math.random() * this.unshuffled.length);
                 // the card we just removed from the array
-                var card = toShuffle.splice(randomCard, 1);
+                var card = this.unshuffled.splice(randomCard, 1);
                 // put the new card in the array - note to self here ...
                 // everything in javascript is an object, as such, card gets
                 // returned as an array of elements
-                shuffled.push(new BJ.Card(card[0].suit, card[0].value));
+                this.shuffled.push(new BJ.Card(card[0].suit, card[0].value()));
             }
-            // the returned shuffled array
-            return shuffled;
+        };
+        Deck.prototype.deal = function () {
+            if (this.shuffled.length === 0) {
+                if (this.unshuffled.length != 0) {
+                    return this.unshuffled.shift();
+                }
+                return null;
+            }
+            return this.shuffled.shift();
         };
         return Deck;
     })();
