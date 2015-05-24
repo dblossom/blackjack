@@ -42,16 +42,19 @@ var BJ;
                 [BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand, BJ.Play.Stand] // 17+
             ];
         }
-        BasicStrategy.prototype.Advice = function (hand, upCard) {
+        BasicStrategy.prototype.advice = function (hand, upCard) {
             var play = null;
             var column = (upCard.isAce()) ? 9 : (upCard.value() - 2);
             if (hand.isPair()) {
+                //alert("isPair()");
                 play = this.pairLookup(hand, column);
             }
             else if (hand.size() == 2 && this.hasAce(hand)) {
+                //alert("isAce()");
                 play = this.aceLookup(hand, column);
             }
             else {
+                //alert("isHard()");
                 play = this.hardLookup(hand, column);
             }
             return play;

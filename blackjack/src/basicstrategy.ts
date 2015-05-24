@@ -47,17 +47,20 @@ module BJ{
 		constructor(){}
 			
 		
-		public Advice(hand: Hand, upCard: Card): Play{
+		public advice(hand: Hand, upCard: Card): Play{
 			
 			var play: Play = null;
 			
 		    var column:number = (upCard.isAce()) ? 9 : (upCard.value() - 2); 
 		    
 		    if(hand.isPair()){
+		    	//alert("isPair()");
 		    	play = this.pairLookup(hand, column);
 		    }else if(hand.size() == 2 && this.hasAce(hand)){
+		    	//alert("isAce()");
 		    	play = this.aceLookup(hand, column);
 		    }else{
+		    	//alert("isHard()");
 		    	play = this.hardLookup(hand, column);
 		    }
 			return play;

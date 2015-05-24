@@ -52,7 +52,7 @@ module BJ{
 		     	// put the new card in the array - note to self here ...
 		     	// everything in javascript is an object, as such, card gets
 		     	// returned as an array of elements
-		     	this.shuffled.push(new Card(card[0].suit, card[0].value()));
+		     	this.shuffled.push(new Card(card[0].suit, card[0].trueValue));
 		     }   
 		 }
 		 

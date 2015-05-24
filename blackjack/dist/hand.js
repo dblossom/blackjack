@@ -15,7 +15,7 @@ var BJ;
             this.values = [0, 0];
         }
         Hand.prototype.isPair = function () {
-            if ((this.handArray.length == 2) && (this.handArray[0].value == this.handArray[1].value)) {
+            if ((this.handArray.length == 2) && (this.handArray[0].value() === this.handArray[1].value())) {
                 return true;
             }
             return false;

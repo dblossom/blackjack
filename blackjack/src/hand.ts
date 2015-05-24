@@ -20,7 +20,7 @@ module BJ{
 		
 		public isPair(): boolean{
 			
-			if((this.handArray.length == 2) && (this.handArray[0].value == this.handArray[1].value)){
+			if((this.handArray.length == 2) && (this.handArray[0].value() === this.handArray[1].value())){
 				return true;
 			}
 			return false;
@@ -74,6 +74,6 @@ module BJ{
 			
 		public size(): number{
 			return this.handArray.length;
-		}
+		}''
 	}
 }
