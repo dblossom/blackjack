@@ -74,6 +74,6 @@ module BJ{
 			
 		public size(): number{
 			return this.handArray.length;
-		}''
+		}
 	}
 }
