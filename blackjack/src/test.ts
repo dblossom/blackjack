@@ -5,11 +5,15 @@ module BJ{
 		public deck;
 		public shuffled;
 		public phand;
+		public dhand;
 		public canvas;
 		public context;
 		private lastCardLocation;
+		private lastCardLocationDealer;
 		private bs;
 		private upcard;
+		// 0 is dealer, 1 is player
+		private control;
 		
 		
 		constructor(){}
@@ -21,7 +25,15 @@ module BJ{
 		    this.context.font = "bold 20px Arial";
 		    this.context.clearRect(0,0,500,500);
 		    
+		    var img = new Image();
+
+            img.onload = function() {
+                Test.prototype.context.drawImage(img, 69, 50);
+            };
+            img.src = "images/cards/front/10C.png";
+		    
 		    this.bs = new BasicStrategy();
+		    this.control = 0; // dealer is dealing - his control
 		}
 		
 		public dealCard(btn){
@@ -34,9 +46,15 @@ module BJ{
 		    var pcard2 = this.deck.deal();
 		    this.upcard = this.deck.deal();
 		    
+		    this.control = 1; // cards are dealt, players control
+		    
 		    this.phand = new Hand();
 		    this.phand.hit(pcard1);
 		    this.phand.hit(pcard2);
+		    
+		    this.dhand = new Hand();
+		    this.dhand.hit(hole);
+		    this.dhand.hit(this.upcard);
 		    
 		    this.context.clearRect(0,0,500,500);
 		    
@@ -51,6 +69,7 @@ module BJ{
 	        this.context.fillText("  of  ", 15, 50);
 	        this.context.fillText(hole.suit.toString(), 55, 50);
 		    this.context.fillText("       <--- dealers hole card!", 150, 50);
+		    this.lastCardLocationDealer = 50;
 		    
 		    // pcard1
 		    this.context.fillText(pcard1.rank(), 0, 200);
@@ -72,18 +91,66 @@ module BJ{
 		}
 		
 		public hitCard(btn){
-			var pcard = this.deck.deal();
-			this.phand.hit(pcard);
-			this.lastCardLocation = this.lastCardLocation + 25;
+			if(this.control === 0){
+				// just do nothing for now -- but it is the dealers control
+			}else{
+			    var pcard = this.deck.deal();
+			    this.phand.hit(pcard);
+			    this.lastCardLocation = this.lastCardLocation + 25;
 			
-			this.context.fillText(pcard.rank(), 0, this.lastCardLocation);
-	        this.context.fillText("  of  ", 15, this.lastCardLocation);
-	        this.context.fillText(pcard.suit.toString(), 55, this.lastCardLocation);
-		    this.context.fillText("       <--- player card " + this.phand.size() + "!", 150, this.lastCardLocation);
+			    this.context.fillText(pcard.rank(), 0, this.lastCardLocation);
+	            this.context.fillText("  of  ", 15, this.lastCardLocation);
+	            this.context.fillText(pcard.suit.toString(), 55, this.lastCardLocation);
+		        this.context.fillText("       <--- player card " + this.phand.size() + "!", 150, this.lastCardLocation);
 		    
-		    this.context.clearRect(0,450,500,500);
-		    this.context.fillText("The Player should..." + Play[this.bs.advice(this.phand,this.upcard)].toString(), 0, 480);
-			
+		        this.context.clearRect(0,450,500,500);
+		        
+		        if(this.phand.isBroke()){
+		        	this.context.fillText("You bust...", 0, 480);
+		        	this.control = 0;
+		        	this.endGame();
+		        }else{
+		            this.context.fillText("The Player should..." + Play[this.bs.advice(this.phand,this.upcard)].toString(), 0, 480);
+		        }
+			}
 		}
+		
+		public standButton(btn){
+			this.control = 0; // give control to dealer
+			this.dealersPlay();
+		}
+		
+		public dealersPlay(){
+			if(this.control != 0){
+				// wow dealers cheating!!
+			}else{
+				while(!this.dhand.isBroke() && this.dhand.value() < 18){
+					var dcard = this.deck.deal();
+					this.dhand.hit(dcard);
+					this.lastCardLocationDealer = this.lastCardLocationDealer + 25;
+					
+					this.context.fillText(dcard.rank(), 0, this.lastCardLocationDealer);
+					this.context.fillText("  of  ", 15, this.lastCardLocationDealer);
+					this.context.fillText(dcard.suit.toString(), 55, this.lastCardLocationDealer);
+					this.context.fillText("       <--- dealers card " + this.dhand.size() + "!", 150, this.lastCardLocationDealer);
+					
+				}
+			}
+			this.endGame();
+		}
+		public endGame(){
+			
+			if(this.dhand.isBroke() && !this.phand.isBroke()){
+				this.context.fillText("You win!", 0, 450);
+			}else if(this.phand.isBroke()){
+				this.context.fillText("You lose!", 0, 450);
+			}else if(this.phand.value() > this.dhand.value()){
+				this.context.fillText("You win!", 0, 450);
+			}else{
+				this.context.fillText("You lose!", 0, 450);
+			}
+			// vars to end game
+		}
+		
 	}
 }
