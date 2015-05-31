@@ -16,10 +16,11 @@
    <script type="text/javascript" src="dist/deck.js"></script>
    <script type="text/javascript" src="dist/basicstrategy.js"></script>
    <script type="text/javascript" src="dist/play.js"></script>
+   <script type="text/javascript" src="dist/game.js"></script>
 
 </head>
 
-<body onload="BJ.Test.prototype.load();">
+<body onload="BJ.Game.prototype.load();">
 
 <p> Holding page for Blackjack game </p>
 <div id="main" style="width:100%;">
@@ -35,7 +36,7 @@
                 class="normal_button"
                 value="deal"
                 tabindex="1"
-                onclick="BJ.Test.prototype.dealCard(this);">
+                onclick="BJ.Game.prototype.dealButton(this);">
 
 <input type="button"
                 id = "hit"
@@ -59,7 +60,7 @@
                 class="normal_button"
                 value="double"
                 tabindex="4"
-                onclick=";">
+                onclick="BJ.Test.prototype.doubleButton(this);">
 
 </div>
 

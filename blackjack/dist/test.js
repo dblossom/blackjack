@@ -7,13 +7,40 @@ var BJ;
             // gets the canvas, sets font, clears remaining
             this.canvas = document.getElementById('display');
             this.context = this.canvas.getContext('2d');
-            this.context.font = "bold 20px Arial";
+            this.context.font = "bold 12px Arial";
             this.context.clearRect(0, 0, 500, 500);
             var img = new Image();
+            var img1 = new Image();
             img.onload = function () {
-                Test.prototype.context.drawImage(img, 69, 50);
+                Test.prototype.context.drawImage(img, 160, 380);
+                Test.prototype.context.drawImage(img1, 180, 380);
+                Test.prototype.context.drawImage(img1, 200, 380);
+                Test.prototype.context.drawImage(img1, 220, 380);
+                Test.prototype.context.drawImage(img1, 240, 380);
+                Test.prototype.context.drawImage(img1, 260, 380);
+                Test.prototype.context.drawImage(img1, 280, 380);
             };
             img.src = "images/cards/front/10C.png";
+            img1.src = "images/cards/front/AC.png";
+            var imgA = new Image();
+            imgA.onload = function () {
+                Test.prototype.context.drawImage(imgA, 50, 50);
+            };
+            imgA.src = "images/cards/front/2C.png";
+            var img2 = new Image();
+            var img3 = new Image();
+            img2.onload = function () {
+                Test.prototype.context.drawImage(img2, 160, 20);
+                Test.prototype.context.drawImage(img3, 180, 20);
+                Test.prototype.context.drawImage(img3, 200, 20);
+                Test.prototype.context.drawImage(img3, 220, 20);
+                Test.prototype.context.drawImage(img2, 240, 20);
+                Test.prototype.context.drawImage(img2, 260, 20);
+                Test.prototype.context.drawImage(img2, 280, 20);
+            };
+            img2.src = "images/cards/front/8H.png";
+            img3.src = "images/cards/front/9D.png";
+            this.context.fillText("Dealer Stands on ANY 17", 150, 140);
             this.bs = new BJ.BasicStrategy();
             this.control = 0; // dealer is dealing - his control
         };
@@ -115,6 +142,19 @@ var BJ;
                 this.context.fillText("You lose!", 0, 450);
             }
             // vars to end game
+        };
+        Test.prototype.doubleButton = function (btn) {
+            var img = new Image();
+            img.onload = function () {
+                Test.prototype.context.drawImage(img, 160, 20);
+                Test.prototype.context.drawImage(img, 180, 20);
+                Test.prototype.context.drawImage(img, 200, 20);
+                Test.prototype.context.drawImage(img, 220, 20);
+                Test.prototype.context.drawImage(img, 240, 20);
+                Test.prototype.context.drawImage(img, 260, 20);
+                Test.prototype.context.drawImage(img, 280, 20);
+            };
+            img.src = "images/cards/front/7S.png";
         };
         return Test;
     })();
