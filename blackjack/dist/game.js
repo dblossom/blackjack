@@ -74,12 +74,12 @@ var BJ;
                 this.phand.hit(card);
                 this.loadCardImage(card);
                 if (this.phand.isBroke()) {
-                    alert("You bust");
                     //this.context.fillText("You bust...", 0, 480);
                     this.turn = 0;
                     this.redrawPlayerScore();
                     this.redrawStrategy();
                     this.endGame();
+                    this.flipBurnCard(); // now - with more players no
                 }
                 else {
                     this.redrawPlayerScore();
