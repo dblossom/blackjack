@@ -36,25 +36,22 @@ var BJ;
                 // our deck
                 this.deck = new BJ.Deck();
                 this.deck.shuffleDeck();
-                // players first card
-                this.turn = 1; // hack
-                var card = this.deck.deal();
-                this.phand.hit(card);
-                this.loadCardImage(card);
-                // dealers down card
-                card = this.deck.deal();
-                this.dhand.hit(card);
-                // we do not show the first card
-                this.loadBurnCard();
-                // players second card
-                card = this.deck.deal();
-                this.phand.hit(card);
-                this.loadCardImage(card);
-                this.turn = 0; // hack
-                // dealers up card
-                card = this.deck.deal();
-                this.dhand.hit(card);
-                this.loadCardImage(card);
+                // give out our cards to players and dealer
+                // TODO: modularize this, but for now...
+                // player1 gets first card
+                this.phand.hit(this.deck.deal());
+                // dealer gets next card
+                this.dhand.hit(this.deck.deal());
+                // player1 gets second card
+                this.phand.hit(this.deck.deal());
+                // dealer gets his/her second card
+                this.dhand.hit(this.deck.deal());
+                // put all players into an array
+                // TODO: not the place for this - just saying
+                var players = [];
+                players.push(this.phand);
+                // first deal
+                this.firstDeal(players);
                 // redraw the score to the screen
                 this.redrawPlayerScore();
                 // redraw the strategy to the screen
@@ -112,6 +109,49 @@ var BJ;
         Game.prototype.standButton = function (btn) {
             this.turn = 0; // turn to dealer
             this.dealersPlay();
+        };
+        /**
+         * This is for the "first deal" to have the cards deal out slow
+         */
+        Game.prototype.firstDeal = function (players) {
+            // There are 2 rounds of dealing...
+            var round_two = false;
+            // need to do something better
+            this.turn = 1;
+            // dealer to all the players first
+            for (var i = 0; i < players.length; i++) {
+                var that = this;
+                var timeout = i * 1000;
+                setTimeout(function () {
+                    that.loadCardImage(players[0].seeCard(0));
+                }, 1000, that, players, i);
+            }
+            // now get to the dealer
+            setTimeout(function () {
+                that.loadHoleCard();
+            }, 1500, that);
+            // do not need this variable but
+            round_two = true;
+            // dealer the players second card
+            for (var i = 0; i < players.length; i++) {
+                var that = this;
+                var timeout = i * 2000;
+                setTimeout(function () {
+                    that.loadCardImage(players[0].seeCard(1));
+                }, 2000, that, players, i);
+            }
+            // dealers up card
+            // first off we need to figure out how long the
+            // other waits are ...
+            // add a second for good measure
+            var fullTO = ((players.length * 1000) + (players.length * 2000));
+            setTimeout(function () {
+                that.turn = 0;
+                that.loadCardImage(that.dhand.seeCard(1));
+            }, fullTO, that);
+            setTimeout(function () {
+                that.turn = 1;
+            }, fullTO + 500, that);
         };
         /**
          * This is what happens when it's the dealers turn
@@ -193,9 +233,9 @@ var BJ;
             img.src = "images/cards/front/" + imgLoc + ".png";
         };
         /**
-         * This loads a card back
+         * This loads the hole card
          */
-        Game.prototype.loadBurnCard = function () {
+        Game.prototype.loadHoleCard = function () {
             this.dealerCardX = this.dealerCardX + this.xInc;
             var locX = this.dealerCardX;
             var locY = this.dealerCardY;
