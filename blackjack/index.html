@@ -22,13 +22,18 @@
 
 <body onload="BJ.Game.prototype.load();">
 
-<p> Holding page for Blackjack game </p>
+<p> Basic Blackjack game, stay tuned for changes </p>
+
+<img src="images/blackjack-basic-strategy.png" style="width:400px; height:400px>
+
 <div id="main" style="width:100%;">
     <canvas id="display"
         width="500px"
         height="500px"
         tabindex="0">
     </canvas>
+    
+
 
 <input type="button"
                 id = "deal"
@@ -43,6 +48,7 @@
                 name="HIT"
                 class="normal_button"
                 value="hit"
+                disabled = "disabled"
                 tabindex="2"
                 onclick="BJ.Game.prototype.hitButton(this);">
            
@@ -51,6 +57,7 @@
                 name="STAND"
                 class="normal_button"
                 value="stand"
+                disabled = "disabled"
                 tabindex="3"
                 onclick="BJ.Game.prototype.standButton(this);">
                
@@ -59,8 +66,18 @@
                 name="DOUBLE"
                 class="normal_button"
                 value="double"
+                disabled = "disabled"
                 tabindex="4"
-                onclick=";">
+                onclick="BJ.Game.prototype.doubleButton(this);">
+                
+<input type="button"
+                id = "split"
+                name="SPLIT"
+                class="normal_button"
+                value="split"
+                disabled = "disabled"
+                tabindex="5"
+                onclick="BJ.Game.prototype.splitButton(this);">
 
 </div>
 

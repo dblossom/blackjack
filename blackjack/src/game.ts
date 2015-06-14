@@ -5,7 +5,6 @@ module BJ{
 		 * All global variables for the game will be here
 		 */
 		public deck;
-		public phand;
 		public dhand;
 		public canvas;
 		public context;
@@ -14,30 +13,21 @@ module BJ{
 		private dealerCardX;
 		private dealerCardY;
 		private xInc;
-
-		// 0 is dealer, 1 is player
 		private turn;
-
+		private players;
+		private numPlayers: number;
+		private holeCardFlipped;
 		
 		constructor(){}
-		
-		private init(){
-
-			this.turn = 0; // dealers turn
-            this.initalXYCards(); 
-		}
 		
 		/**
 		 * This is the entry point, or "load" for the game
 		 * set up and variables or whatever here
 		 */
 		public load(){
-			// should load be in a different class, because I am about to call
-			// this glass - I guess we can just consider this main and static like?
-			// anywho - this will load any variables we need "globally"
-			this.init();
-			
-			// draw inital screen
+			// -- determine what does / doesnot need to be here
+			this.turn = 0;
+            this.initalXYCards(); 
 			this.redrawOpeningScreen()
 		}
 		
@@ -45,53 +35,38 @@ module BJ{
 		 * This will deal the inital cards - 1 dealer card will be face down
 		 */
 		public dealButton(btn){
-			
+			// consider - enable / disable buttons vs errors
 			if(this.turn != 0){
 			    // throw some sorta error
 			    // not the dealer, cannot deal
 			    // a player could be playing	
 			}else{
-				
+				// disable this button from rest of game
+				btn.disabled = true;
+				// enabled the "play" buttons
+				this.setPlayButtons();
+				// holecard not flipped
+				this.holeCardFlipped = false;
+				// destroy the players array...
+				this.players = [];
 				// start with new screen
 				this.redrawOpeningScreen();
+				// reset xy card positions
 				this.initalXYCards();
-				
-	            // players hand
-			    this.phand = new Hand();
-			    // dealers hand
+				// how many players
+				this.numPlayers = 1;
+				// load players into array
+				this.initPlayers();
+			    // reset dealers hand
 			    this.dhand = new Hand();
-			    
-			    // our deck
+			    // our deck - TODO: array of decks
 			    this.deck = new Deck();
+			    // shuffle
 			    this.deck.shuffleDeck();
-			    
-			    // give out our cards to players and dealer
-			    // TODO: modularize this, but for now...
-			    // player1 gets first card
-			    this.phand.hit(this.deck.deal());
-			    // dealer gets next card
-			    this.dhand.hit(this.deck.deal());
-			    // player1 gets second card
-			    this.phand.hit(this.deck.deal());
-			    // dealer gets his/her second card
-			    this.dhand.hit(this.deck.deal());
-			    
-			    // put all players into an array
-			    // TODO: not the place for this - just saying
-			    var players: Array<Hand> = [];
-			    players.push(this.phand);
-			    
-			    // first deal
-			    this.firstDeal(players);
-			    
-			    
-			    
-			    // redraw the score to the screen
-			    this.redrawPlayerScore();
-			    
-			    // redraw the strategy to the screen
-			    this.redrawStrategy();
-			    
+			    // load the cards in arrays
+			    this.initalDeal(this.players);
+			    // first deal - to screen
+			    this.firstDeal(this.players);
 			    // give control to the first player
 			    this.turn = 1;
 		    }
@@ -101,20 +76,24 @@ module BJ{
 		 * This is what will happen when the player "hits"
 		 */
 		public hitButton(btn){
+			// HMM -- 
 		   	if(this.turn === 0){
 				// just do nothing for now -- but it is the dealers control
 			}else{
+				var phand = this.players[this.turn-1];
 			    var card = this.deck.deal();
-			    this.phand.hit(card);
+			    phand.hit(card);
 			    this.loadCardImage(card);
-		        
-		        if(this.phand.isBroke()){
-		        	//this.context.fillText("You bust...", 0, 480);
-		        	this.turn = 0;
+		        if(phand.isBroke()){
 		        	this.redrawPlayerScore();
-		        	this.redrawStrategy();
-		        	this.endGame();
-		        	this.flipBurnCard(); // now - with more players no
+		        	this.turn++;
+		        	this.context.fillText("BUST!",200, 350);
+		        	if(this.turn > this.numPlayers){
+		        		this.turn = 0;
+		        		this.dealersPlay();
+		        	}else if(this.turn > 1){
+		        	    this.botPlayer();	
+		        	} 
 		        }else{
 		            this.redrawPlayerScore();
 		            this.redrawStrategy();
@@ -123,66 +102,156 @@ module BJ{
 		}
 		
 		/**
-		 * End of game clean up stuff
-		 */
-		private endGame(){
-			if(this.dhand.isBroke() && !this.phand.isBroke()){
-				this.context.fillText("You win!", 250, 250);
-			}else if(this.phand.isBroke()){
-				this.context.fillText("You lose!", 250, 250);
-			}else if(this.phand.value() > this.dhand.value()){
-				this.context.fillText("You win!",250, 250);
-			}else{
-				this.context.fillText("You lose!",250, 250);
-			}
-			// control back to dealer
-			this.turn = 0;
-		}
-		
-		/**
 		 * This is what happens when a player stands
 		 */
 		public standButton(btn){
-			this.turn = 0; // turn to dealer
-			this.dealersPlay();
+			this.turn++;
+			if(this.turn > 1 && this.turn < this.numPlayers){
+				this.botPlayer();
+			}else{
+				this.turn = 0;
+				this.dealersPlay();
+			}
+		}
+		
+		/**
+		 * This is what happens when a player doubles
+		 */
+		public doubleButton(btn){
+			// take one card and move on ...
+			this.hitButton(btn);
+			this.standButton(btn);
+		}
+		
+		/**
+		 * This is what happens when a player splits
+		 */
+		public splitButton(btn){
+			alert("Not implemented, just fucking hit or something");
+		}
+		
+		private setPlayButtons(){
+			// just need to check one ...
+			if(document.getElementById("hit").disabled === true){
+			    document.getElementById("hit").disabled = false;
+			    document.getElementById("stand").disabled = false;
+			    document.getElementById("double").disabled = false;
+			    document.getElementById("split").disabled = false;
+			}else{
+				document.getElementById("hit").disabled = true;
+			    document.getElementById("stand").disabled = true;
+			    document.getElementById("double").disabled = true;
+			    document.getElementById("split").disabled = true;
+			}
+		}
+		
+		private redrawDealerScore(){
+			if(!this.holeCardFlipped){
+			    this.context.fillText("Dealers score: "+this.dhand.seeCard(1).value(),2,25);	
+			}else{
+			    this.context.clearRect(0,0,150,50);	
+			    this.context.fillText("Dealers score: "+this.dhand.value(),2,25);
+			}
+		}
+		
+		/**
+		 * A bot player
+		 */
+		private botPlayer(){
+			// just make a loop doing whatever
+			// the strat says to do ...
+		}
+		
+		/**
+		 * End of game clean up stuff
+		 */
+		private endGame(){
+			
+			// SO -- since any other players will be "bots"
+			// and will make moves on the basic strat -- 
+			// let us just show the score for player one...
+			
+			var phand = this.players[0];
+			
+			if(this.dhand.isBroke() && !phand.isBroke()){
+				this.context.fillText("You WIN!", 200, 250);
+			}else if(phand.isBroke()){
+				this.context.fillText("FUCK - YOU LOST!", 200, 250);
+			}else if(phand.value() > this.dhand.value()){
+				this.context.fillText("You WIN!",200, 250);
+			}else if(phand.value() === this.dhand.value()){
+				this.context.fillText("It's a PUSH!",200, 250)
+			}else{
+				this.context.fillText("FUCK - YOU LOST!",200, 250);
+			}
+			// control back to dealer
+			this.turn = 0;
+			this.setPlayButtons();
+			document.getElementById("deal").disabled = false;
+		}
+		
+		/**
+		 * loads the arrays of hands with cards for the inital
+		 * game load
+		 */
+		private initalDeal(players:Array<Hand>){
+			// round one
+			for(var i = 0; i < players.length; i++){
+				players[i].hit(this.deck.deal());
+			}
+			// dealers hole card
+			this.dhand.hit(this.deck.deal());
+			// round two
+			for(var i = 0; i < players.length; i++){
+				players[i].hit(this.deck.deal());
+			}
+			// dealers up card
+			this.dhand.hit(this.deck.deal());
+		}
+		
+		/**
+		 * Initalize the players - load array
+		 */
+		private initPlayers(){
+			for(var i = 0; i < this.numPlayers; i++){
+				this.players.push(new Hand());
+			}
 		}
 		
 		/**
 		 * This is for the "first deal" to have the cards deal out slow
 		 */
-		 
 		private firstDeal(players:Array<Hand>){
 			
-			// There are 2 rounds of dealing...
-			var round_two:boolean = false;
-			
 			// need to do something better
+			// maybe set turn each time using "i"
+			// oh boy that sounds like a mess 
 			this.turn = 1;
-			    
-			// dealer to all the players first
+			
+			// deal to all the players first
 			for(var i:number = 0; i < players.length; i++){
 			    var that = this;
-			    var timeout = i * 1000;
+			    // i think this will break too...
+			    var timeout = (i+1) * 1000;
 				setTimeout(function(){
-				    that.loadCardImage(players[0].seeCard(0));
-				},1000,that,players, i);
+				    that.loadCardImage(players[i-1].seeCard(0));
+				},timeout,that,players, i);
 			}
 			
 			// now get to the dealer
 			setTimeout(function(){
 				that.loadHoleCard();
-			},1500, that);			
+			},((players.length * 1000)+500), that);			
 			
-			// do not need this variable but
-			round_two = true;
-			
-			// dealer the players second card
+			// deal the players second card
 			for(var i:number = 0; i < players.length; i++){
 			    var that = this;
-			    var timeout = i * 2000;
+			    var timeout = (i+1) * 2000;
 				setTimeout(function(){
-				    that.loadCardImage(players[0].seeCard(1));
-				},2000,that,players, i);
+				    that.loadCardImage(players[i-1].seeCard(1));
+				    that.redrawPlayerScore();
+				    that.redrawStrategy();
+				},timeout,that,players, i);
 			}
 			
 			// dealers up card
@@ -192,11 +261,12 @@ module BJ{
 			var fullTO = ((players.length * 1000) + (players.length * 2000));
 			setTimeout(function(){
 				that.turn = 0;
-		        that.loadCardImage(that.dhand.seeCard(1));
+		        that.loadCardImage(that.dhand.seeCard(1));		    
+			    that.redrawDealerScore();
 			},fullTO, that);
 			
 			setTimeout(function(){
-				that.turn = 1;
+				that.turn = 1; // back to one lol
 			},fullTO + 500, that);
 		}
 		 
@@ -207,17 +277,44 @@ module BJ{
 			if(this.turn != 0){
 				// wow dealers cheating!!
 			}else{
-				
-				// we need to "flip" the hole card
 				this.flipBurnCard();
-				
-				while(!this.dhand.isBroke() && this.dhand.value() < 18){
-					var card = this.deck.deal();
-					this.dhand.hit(card);
-					this.loadCardImage(card);
+				this.redrawDealerScore();
+				// first we need to check if any player is still standing
+				if(!this.playersLeft()){
+			        // take everyone money
+				}else{
+					// first let us build the hand
+					while(!this.dhand.isBroke() && this.dhand.value() < 17){
+				    	var card = this.deck.deal();
+					    this.dhand.hit(card);
+				    }
+				    // now let us print the score to the screen and alert player
+				    var cPrint = 2;
+				    for(var i = 0; (i+2) < this.dhand.size(); i++){
+				    	var that = this;
+				    	var timeout = (i+1) * 1000;
+				    	setTimeout(function(){
+				    		that.loadCardImage(that.dhand.seeCard(cPrint++));
+				    		that.redrawDealerScore();
+				    	},timeout,that,cPrint);
+				    }				
 				}
+				
 			}
 			this.endGame();
+		}
+		
+		/**
+		 * This will check if any players are still in the game
+		 */
+		private playersLeft(){
+			
+			for(var i = 0; i < this.numPlayers; i++){
+				if(!this.players[i].isBroke()){
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		/**
@@ -250,7 +347,7 @@ module BJ{
 		 */
 		private redrawPlayerScore(){
 			this.context.clearRect(2,450,150,500);
-			this.context.fillText("Players score: " + this.phand.value(),2,490);
+			this.context.fillText("Players score: " + this.players[this.turn-1].value(),2,490);
 		}
 		
 		/**
@@ -259,11 +356,13 @@ module BJ{
 		private redrawStrategy(){
 			this.context.clearRect(310,450,500,500);
 			var bs = new BasicStrategy();
-			this.context.fillText("The player should: " + Play[bs.advice(this.phand,this.dhand.seeCard(1))].toString(), 310, 490)
+			this.context.fillText("The player should: " + Play[bs.advice(this.players[this.turn-1],this.dhand.seeCard(1))].toString(), 310, 490)
 		}
 		
 		/**
 		 * This will load a card image and print to screen
+		 * TODO: make this good for the bot players too ...
+		 *       this is going to be a PITA to fix up!!!
 		 * @param card: the card to load
 		 */
 		private loadCardImage(card:Card){
@@ -325,8 +424,7 @@ module BJ{
             var upLoc = this.dhand.seeCard(1).rank() + this.dhand.seeCard(1).suit.toString().charAt(0);
 			hole.src = "images/cards/front/"+holeLoc+".png";
 			up.src = "images/cards/front/"+upLoc+".png";
+			this.holeCardFlipped = true;
 		 }
-
-		
 	}
 }
