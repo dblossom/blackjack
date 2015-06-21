@@ -48,6 +48,7 @@ var BJ;
                 // first deal - to screen
                 this.firstDeal(this.players);
                 // give control to the first player
+                this.checkInitalBJ();
                 this.turn = 1;
             }
         };
@@ -123,6 +124,31 @@ var BJ;
                 document.getElementById("split").disabled = true;
             }
         };
+        Game.prototype.checkInitalBJ = function () {
+            if (this.dhand.isBlackjack()) {
+                var anyone = false;
+                for (var i = 0; i < this.players.length; i++) {
+                    if (this.players[i].isBlackjack()) {
+                        anyone = true;
+                        this.turn = i + 1;
+                        this.standButton(this);
+                    }
+                }
+                if (anyone === false) {
+                    this.flipHoleCard();
+                    this.endGame();
+                }
+            }
+            else {
+                for (var i = 0; i < this.players.length; i++) {
+                    if (this.players[i].isBlackjack()) {
+                        this.turn = i + 1;
+                        this.standButton(this);
+                    }
+                }
+            }
+            this.turn = 0; // back to dealer
+        };
         Game.prototype.redrawDealerScore = function () {
             if (!this.holeCardFlipped) {
                 this.context.fillText("Dealers score: " + this.dhand.seeCard(1).value(), 2, 25);
@@ -158,6 +184,9 @@ var BJ;
             }
             else if (phand.value() === this.dhand.value()) {
                 this.context.fillText("It's a PUSH!", 200, 250);
+            }
+            else if (phand.isBlackjack()) {
+                this.context.fillText("BLACKJACK!!!", 200, 250);
             }
             else {
                 this.context.fillText("FUCK - YOU LOST!", 200, 250);
@@ -245,7 +274,7 @@ var BJ;
             if (this.turn != 0) {
             }
             else {
-                this.flipBurnCard();
+                this.flipHoleCard();
                 this.redrawDealerScore();
                 // first we need to check if any player is still standing
                 if (!this.playersLeft()) {
@@ -361,7 +390,7 @@ var BJ;
         /**
          * This will flip the hole card
          */
-        Game.prototype.flipBurnCard = function () {
+        Game.prototype.flipHoleCard = function () {
             var locX = this.dealerCardX;
             var locY = this.dealerCardY;
             var hole = new Image();

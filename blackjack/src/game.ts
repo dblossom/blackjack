@@ -68,6 +68,7 @@ module BJ{
 			    // first deal - to screen
 			    this.firstDeal(this.players);
 			    // give control to the first player
+			    this.checkInitalBJ();
 			    this.turn = 1;
 		    }
 		}
@@ -145,6 +146,32 @@ module BJ{
 			}
 		}
 		
+		private checkInitalBJ(){
+			
+			if(this.dhand.isBlackjack()){
+				var anyone = false;
+				for(var i = 0; i < this.players.length; i++){
+					if(this.players[i].isBlackjack()){
+						anyone = true;
+						this.turn = i + 1;
+						this.standButton(this);
+					}
+			    }
+			    if(anyone === false){
+			    	this.flipHoleCard();
+			    	this.endGame();
+			    }
+			}else{
+				for(var i = 0; i < this.players.length; i++){
+					if(this.players[i].isBlackjack()){
+						this.turn = i + 1;
+						this.standButton(this);
+					}
+				}
+			}
+			this.turn = 0; // back to dealer
+		}
+		
 		private redrawDealerScore(){
 			if(!this.holeCardFlipped){
 			    this.context.fillText("Dealers score: "+this.dhand.seeCard(1).value(),2,25);	
@@ -181,6 +208,8 @@ module BJ{
 				this.context.fillText("You WIN!",200, 250);
 			}else if(phand.value() === this.dhand.value()){
 				this.context.fillText("It's a PUSH!",200, 250)
+			}else if(phand.isBlackjack()){
+				this.context.fillText("BLACKJACK!!!", 200, 250);
 			}else{
 				this.context.fillText("FUCK - YOU LOST!",200, 250);
 			}
@@ -277,7 +306,7 @@ module BJ{
 			if(this.turn != 0){
 				// wow dealers cheating!!
 			}else{
-				this.flipBurnCard();
+				this.flipHoleCard();
 				this.redrawDealerScore();
 				// first we need to check if any player is still standing
 				if(!this.playersLeft()){
@@ -409,7 +438,7 @@ module BJ{
 		 /**
 		  * This will flip the hole card
 		  */
-		 private flipBurnCard(){
+		 private flipHoleCard(){
 		 	
 		 	var locX = this.dealerCardX;
 		 	var locY = this.dealerCardY;
