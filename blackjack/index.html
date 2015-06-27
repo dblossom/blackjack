@@ -21,20 +21,19 @@
 </head>
 
 <body onload="BJ.Game.prototype.load();">
+<img src="images/blackjack-basic-strategy.png" style="width:400px; height:400px>
 
 <p> Basic Blackjack game, stay tuned for changes </p>
 
-<img src="images/blackjack-basic-strategy.png" style="width:400px; height:400px>
-
-<div id="main" style="width:100%;">
+<div id="main">
 
     <canvas id="display"
         width="500px"
         height="500px"
         tabindex="0">
     </canvas>
-    
 
+<div id="buttons">
 
 <input type="button"
                 id = "deal"
@@ -79,8 +78,7 @@
                 disabled = "disabled"
                 tabindex="5"
                 onclick="BJ.Game.prototype.splitButton(this);">
-
 </div>
-
+</div>
 </body>
 </html>

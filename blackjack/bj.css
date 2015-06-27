@@ -1,4 +1,19 @@
 #display{
-    background-color:#00FF00;
-    border: 1px solid black;
+     background-color:#00FF00;
+     border: 1px solid black;
+}
+#main{
+     position:fixed; 
+     top:0; 
+     left:0; 
+     width:100%; 
+     height:100%;
+}
+#buttons{
+     position:absolute; 
+     width:50%; 
+     height:50%; 
+     top:50%; 
+     margin: 0 auto; 
+     position:relative;
 }

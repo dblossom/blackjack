@@ -319,9 +319,10 @@ module BJ{
 				    }
 				    // now let us print the score to the screen and alert player
 				    var cPrint = 2;
+				    var timeout;
 				    for(var i = 0; (i+2) < this.dhand.size(); i++){
 				    	var that = this;
-				    	var timeout = (i+1) * 1000;
+				    	timeout = (i+1) * 1000;
 				    	setTimeout(function(){
 				    		that.loadCardImage(that.dhand.seeCard(cPrint++));
 				    		that.redrawDealerScore();
@@ -330,7 +331,11 @@ module BJ{
 				}
 				
 			}
-			this.endGame();
+			// we cannot call end game until AFTER the timeout has completed.
+			var that = this;
+			setTimeout(function(){
+				that.endGame();
+			},timeout + 500,that);
 		}
 		
 		/**
