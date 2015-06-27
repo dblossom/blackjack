@@ -12,6 +12,7 @@ var BJ;
             this.turn = 0;
             this.initalXYCards();
             this.redrawOpeningScreen();
+            this.bankRoll = new BJ.Money(100); // testing ... start with 100.
         };
         /**
          * This will deal the inital cards - 1 dealer card will be face down

@@ -17,6 +17,7 @@ module BJ{
 		private players;
 		private numPlayers: number;
 		private holeCardFlipped;
+		private bankRoll:Money;
 		
 		constructor(){}
 		
@@ -28,7 +29,8 @@ module BJ{
 			// -- determine what does / doesnot need to be here
 			this.turn = 0;
             this.initalXYCards(); 
-			this.redrawOpeningScreen()
+			this.redrawOpeningScreen();
+			this.bankRoll = new Money(100); // testing ... start with 100.
 		}
 		
 		/**
@@ -207,7 +209,7 @@ module BJ{
 			}else if(phand.value() > this.dhand.value()){
 				this.context.fillText("You WIN!",200, 250);
 			}else if(phand.value() === this.dhand.value()){
-				this.context.fillText("It's a PUSH!",200, 250)
+				this.context.fillText("It's a PUSH!",200, 250);
 			}else if(phand.isBlackjack()){
 				this.context.fillText("BLACKJACK!!!", 200, 250);
 			}else{
