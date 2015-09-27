@@ -108,7 +108,7 @@ var BJ;
          * This is what happens when a player splits
          */
         Game.prototype.splitButton = function (btn) {
-            alert("Not implemented, just fucking hit or something");
+            alert("Not implemented, just hit or something");
         };
         Game.prototype.setPlayButtons = function () {
             // just need to check one ...
@@ -178,7 +178,7 @@ var BJ;
                 this.context.fillText("You WIN!", 200, 250);
             }
             else if (phand.isBroke()) {
-                this.context.fillText("FUCK - YOU LOST!", 200, 250);
+                this.context.fillText("YOU LOST!", 200, 250);
             }
             else if (phand.value() > this.dhand.value()) {
                 this.context.fillText("You WIN!", 200, 250);
@@ -190,7 +190,7 @@ var BJ;
                 this.context.fillText("BLACKJACK!!!", 200, 250);
             }
             else {
-                this.context.fillText("FUCK - YOU LOST!", 200, 250);
+                this.context.fillText("YOU LOST!", 200, 250);
             }
             // control back to dealer
             this.turn = 0;

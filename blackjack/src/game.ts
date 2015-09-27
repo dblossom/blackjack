@@ -130,7 +130,7 @@ module BJ{
 		 * This is what happens when a player splits
 		 */
 		public splitButton(btn){
-			alert("Not implemented, just fucking hit or something");
+			alert("Not implemented, just hit or something");
 		}
 		
 		private setPlayButtons(){
@@ -205,7 +205,7 @@ module BJ{
 			if(this.dhand.isBroke() && !phand.isBroke()){
 				this.context.fillText("You WIN!", 200, 250);
 			}else if(phand.isBroke()){
-				this.context.fillText("FUCK - YOU LOST!", 200, 250);
+				this.context.fillText("YOU LOST!", 200, 250);
 			}else if(phand.value() > this.dhand.value()){
 				this.context.fillText("You WIN!",200, 250);
 			}else if(phand.value() === this.dhand.value()){
@@ -213,7 +213,7 @@ module BJ{
 			}else if(phand.isBlackjack()){
 				this.context.fillText("BLACKJACK!!!", 200, 250);
 			}else{
-				this.context.fillText("FUCK - YOU LOST!",200, 250);
+				this.context.fillText("YOU LOST!",200, 250);
 			}
 			// control back to dealer
 			this.turn = 0;
